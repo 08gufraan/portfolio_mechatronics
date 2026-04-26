@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gufran Momin — Process Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<script type="text/javascript">
+function toggleNote(noteId) {
+    const targetNote = document.getElementById(noteId);
+    if (!targetNote) return;
+
+    // 1. Find all notes and hide them
+    const allNotes = document.querySelectorAll('.note-box');
+    
+    allNotes.forEach(note => {
+        // If it's the one we clicked AND it's already open, we'll handle that later
+        // If it's NOT the one we clicked, hide it immediately
+        if (note.id !== noteId) {
+            note.style.opacity = "0";
+            note.style.transform = "translateY(-20px)";
+            setTimeout(() => { note.style.display = "none"; }, 10);
+        }
+    });
+
+    // 2. Now handle the note the user actually clicked
+    if (targetNote.style.display === "none" || targetNote.style.display === "") {
+        // Give a tiny delay if others are closing so they don't overlap awkwardly
+        setTimeout(() => {
+            targetNote.style.display = "block";
+            setTimeout(() => {
+                targetNote.style.opacity = "1";
+                targetNote.style.transform = "translateY(0)";
+            }, 10);
+        }, 30); 
+    } else {
+        // If it was already open, just close it
+        targetNote.style.opacity = "0";
+        targetNote.style.transform = "translateY(-20px)";
+        setTimeout(() => { targetNote.style.display = "none"; }, 10);
+    }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#3d2a26; --surface:#111318; --border:rgba(255,255,255,0.07);
+    --accent:#e8ff47; --accent2:#47c4ff; --text:#e8e8e0; --muted:#7a7a72;
+    --display:'Syne',sans-serif; --body:'DM Sans',sans-serif;
+    --radius:12px; --gutter:clamp(1.5rem,5vw,5rem);
+  }
+  html { scroll-behavior: smooth; }
+  body { background:var(--bg); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.6; overflow-x:hidden; }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0; opacity:.4;
+  }
+  .note-box{
+    display:none; 
+    padding:10px 30px;
+    border:1px solid #ccc;
+  }
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:1.1rem var(--gutter); background:rgba(10,11,15,0.75); backdrop-filter:blur(18px); border-bottom:1px solid var(--border); }
+  .nav-logo { font-family:var(--display); font-weight:800; font-size:1.1rem; color:var(--accent); letter-spacing:-0.5px; }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { font-size:.85rem; font-weight:500; letter-spacing:.04em; color:var(--muted); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:var(--text); }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; }
+  .hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:.3s; }
+
+  /* HERO */
+  #hero { min-height:100svh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:3rem; padding:8rem var(--gutter) 5rem; position:relative; overflow:hidden; }
+  #hero::after { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px); background-size:80px 80px; pointer-events:none; }
+  .orb { position:absolute; border-radius:50%; filter:blur(100px); pointer-events:none; animation:pulse 8s ease-in-out infinite alternate; }
+  .orb-1 { width:520px; height:520px; background:rgba(232,255,71,.08); top:-100px; right:-100px; }
+  .orb-2 { width:380px; height:380px; background:rgba(71,196,255,.06); bottom:-60px; left:20%; }
+  @keyframes pulse { from{opacity:.6;transform:scale(1)} to{opacity:1;transform:scale(1.12)} }
+  .hero-text { position:relative; z-index:1; }
+  .hero-badge { display:inline-flex; align-items:center; gap:.5rem; background:rgba(232,255,71,.08); border:1px solid rgba(232,255,71,.2); border-radius:100px; padding:.35rem 1rem; font-size:.78rem; font-weight:500; letter-spacing:.06em; color:var(--accent); text-transform:uppercase; margin-bottom:1.5rem; animation:fadeUp .7s ease both; }
+  .badge-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); animation:blink 1.5s ease infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .hero-name { font-family:var(--display); font-size:clamp(3rem,7vw,5.5rem); font-weight:800; line-height:.95; letter-spacing:-3px; animation:fadeUp .7s .1s ease both; }
+  .hero-name span { color:var(--accent); }
+  .hero-role { font-size:clamp(1rem,2vw,1.15rem); color:var(--muted); font-weight:300; margin:1.2rem 0 2.2rem; animation:fadeUp .7s .2s ease both; }
+  .hero-role strong { color:var(--accent2); font-weight:500; }
+  .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; animation:fadeUp .7s .3s ease both; }
+  .btn { display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1.75rem; border-radius:100px; font-family:var(--body); font-size:.9rem; font-weight:500; cursor:pointer; text-decoration:none; transition:.2s; }
+  .btn-primary { background:var(--accent); color:#0a0b0f; }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(232,255,71,.35); }
+  .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+  .btn-ghost:hover { border-color:rgba(255,255,255,.25); background:rgba(255,255,255,.04); }
+  .hero-stats { display:flex; gap:2.5rem; margin-top:3rem; animation:fadeUp .7s .4s ease both; }
+  .stat { display:flex; flex-direction:column; }
+  .stat-num { font-family:var(--display); font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:-1px; }
+  .stat-label { font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+  .hero-visual { position:relative; z-index:1; animation:fadeUp .7s .15s ease both; }
+  .profile-card { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:2.5rem; position:relative; overflow:hidden; }
+  .profile-card::before { content:''; position:absolute; top:-1px; left:24px; right:24px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
+  .profile-img-wrap { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,rgba(232,255,71,.3),rgba(71,196,255,.3)); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:2.5rem; font-weight:800; color:var(--accent); margin-bottom:1.5rem; border:2px solid rgba(232,255,71,.2); }
+  .profile-name { font-family:var(--display); font-weight:700; font-size:1.3rem; }
+  .profile-title { color:var(--muted); font-size:.85rem; margin:.3rem 0 1.2rem; }
+  .profile-tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .tag { font-size:.75rem; padding:.3rem .85rem; border-radius:100px; background:rgba(255,255,255,.05); border:1px solid var(--border); color:var(--muted); }
+  .tag.accent { background:rgba(232,255,71,.08); border-color:rgba(232,255,71,.2); color:var(--accent); }
+  .tag.blue { background:rgba(71,196,255,.08); border-color:rgba(71,196,255,.2); color:var(--accent2); }
+  .card-metrics { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.5rem; }
+  .metric { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; }
+  .metric-val { font-family:var(--display); font-weight:700; font-size:1.4rem; color:var(--text); }
+  .metric-label { font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-top:.2rem; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+  /* COMMON */
+  section { padding:6rem var(--gutter); position:relative; z-index:1; }
+  .section-label { display:inline-block; font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:.75rem; }
+  .section-title { font-family:var(--display); font-size:clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-1.5px; line-height:1.05; margin-bottom:1rem; }
+  .section-sub { color:var(--muted); font-size:1rem; max-width:560px; margin-bottom:3.5rem; font-weight:300; }
+  .divider { height:1px; background:var(--border); margin:0 var(--gutter); }
+
+  /* ABOUT */
+  #about { background:var(--surface); }
+  .about-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:center; }
+  .about-text p { color:var(--muted); line-height:1.8; margin-bottom:1.2rem; font-weight:300; }
+  .about-text p strong { color:var(--text); font-weight:500; }
+  .about-highlights { display:flex; flex-direction:column; gap:1rem; }
+  .highlight-item { display:flex; align-items:flex-start; gap:1rem; background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem 1.4rem; transition:border-color .2s; }
+  .highlight-item:hover { border-color:rgba(232,255,71,.25); }
+  .hi-icon { width:38px; height:38px; border-radius:8px; background:rgba(232,255,71,.1); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+  .hi-title { font-weight:500; font-size:.9rem; margin-bottom:.2rem; }
+  .hi-desc { font-size:.82rem; color:var(--muted); }
+
+  /* EXPERIENCE */
+  .timeline { position:relative; display:flex; flex-direction:column; }
+  .timeline::before { content:''; position:absolute; left:18px; top:0; bottom:0; width:1px; background:var(--border); }
+  .tl-item { display:grid; grid-template-columns:38px 1fr; gap:1.5rem; padding-bottom:2.5rem; }
+  .tl-item:last-child { padding-bottom:0; }
+  .tl-dot { width:37px; height:37px; border-radius:50%; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--accent); position:relative; z-index:1; }
+  .tl-dot.active { background:rgba(232,255,71,.12); border-color:rgba(232,255,71,.35); }
+  .tl-body { padding-top:.4rem; }
+  .tl-period { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.4rem; }
+  .tl-role { font-family:var(--display); font-weight:700; font-size:1.1rem; margin-bottom:.2rem; }
+  .tl-company { font-size:.9rem; color:var(--accent2); margin-bottom:.8rem; }
+  .tl-desc { font-size:.88rem; color:var(--muted); line-height:1.7; font-weight:300; padding-left:1rem; }
+  .tl-desc li { margin-bottom:.5rem; }
+  .tl-skills { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.9rem; }
+
+  /* SKILLS */
+  #skills { background:var(--surface); }
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .skill-card { background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:var(--radius); padding:1.8rem; transition:border-color .25s,transform .25s; }
+  .skill-card:hover { border-color:rgba(232,255,71,.2); transform:translateY(-4px); }
+  .skill-card-icon { font-size:1.6rem; margin-bottom:1rem; width:48px; height:48px; border-radius:10px; background:rgba(232,255,71,.07); display:flex; align-items:center; justify-content:center; }
+  .skill-card-title { font-family:var(--display); font-weight:700; font-size:1rem; margin-bottom:1.2rem; }
+  .skill-bar-wrap { display:flex; flex-direction:column; gap:.85rem; }
+  .skill-row { display:flex; flex-direction:column; gap:.3rem; }
+  .skill-info { display:flex; justify-content:space-between; font-size:.78rem; }
+  .skill-name { color:var(--muted); }
+  .skill-pct { color:var(--accent); font-weight:600; }
+  .bar-bg { height:4px; border-radius:100px; background:rgba(255,255,255,.06); overflow:hidden; }
+  .bar-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--accent2),var(--accent)); transform-origin:left; animation:barGrow 1s ease both; animation-play-state:paused; }
+  .bar-fill.animate { animation-play-state:running; }
+  @keyframes barGrow { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+  /* PROJECTS */
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; }
+  .project-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; transition:transform .25s,border-color .25s; }
+  .project-card:hover { transform:translateY(-6px); border-color:rgba(255,255,255,.14); }
+  .project-thumb { height:150px; background:linear-gradient(135deg,#1a1c22,#13151b); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .project-thumb::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(232,255,71,.05),rgba(71,196,255,.05)); }
+  .project-icon { font-size:3rem; position:relative; z-index:1; }
+  .project-body { padding:1.5rem; }
+  .project-category { font-size:.72rem; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; font-weight:600; margin-bottom:.3rem; }
+  .project-location { font-size:.75rem; color:var(--muted); margin-bottom:.5rem; }
+  .project-title { font-family:var(--display); font-weight:700; font-size:1.05rem; margin-bottom:.6rem; }
+  .project-desc { font-size:.85rem; color:var(--muted); line-height:1.65; font-weight:300; margin-bottom:1.1rem; }
+  .project-tags { display:flex; flex-wrap:wrap; gap:.4rem; }
+
+  /* CERTS */
+  #certifications { background:var(--surface); }
+  .cert-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; }
+  .cert-card { display:flex; align-items:flex-start; gap:1rem; background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:var(--radius); padding:1.4rem; transition:border-color .2s; }
+  .cert-card:hover { border-color:rgba(71,196,255,.3); }
+  .cert-icon { width:42px; height:42px; border-radius:10px; flex-shrink:0; background:rgba(71,196,255,.1); color:var(--accent2); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+  .cert-name { font-weight:500; font-size:.92rem; margin-bottom:.2rem; }
+  .cert-issuer { font-size:.78rem; color:var(--muted); }
+
+  /* EDUCATION */
+  .edu-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .edu-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; transition:border-color .2s; }
+  .edu-card:hover { border-color:rgba(232,255,71,.2); }
+  .edu-degree { font-family:var(--display); font-weight:700; font-size:1rem; margin-bottom:.3rem; }
+  .edu-school { color:var(--accent2); font-size:.88rem; margin-bottom:.3rem; }
+  .edu-year { color:var(--muted); font-size:.8rem; }
+  .edu-note { margin-top:.9rem; }
+  .edu-note-val { font-family:var(--display); font-size:1.4rem; font-weight:800; color:var(--accent); }
+  .edu-note-label { font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
+
+  /* CONTACT */
+  #contact { background:var(--surface); text-align:center; }
+  .contact-wrap { max-width:620px; margin:0 auto; }
+  .contact-links { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2.5rem; }
+  .contact-item { display:flex; align-items:center; gap:.75rem; background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:100px; padding:.75rem 1.4rem; font-size:.88rem; color:var(--text); text-decoration:none; transition:.2s; }
+  .contact-item:hover { border-color:rgba(232,255,71,.35); color:var(--accent); }
+
+  footer { text-align:center; padding:2rem var(--gutter); font-size:.78rem; color:var(--muted); border-top:1px solid var(--border); }
+
+  /* REVEAL */
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .65s ease,transform .65s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+
+  /* RESPONSIVE */
+  @media(max-width:900px) {
+    #hero { grid-template-columns:1fr; padding-top:7rem; }
+    .hero-visual { order:-1; }
+    .profile-card { max-width:480px; margin:0 auto; }
+    .about-grid { grid-template-columns:1fr; gap:3rem; }
+  }
+  @media(max-width:650px) {
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+    .nav-links.open { display:flex; flex-direction:column; position:fixed; top:60px; left:0; right:0; background:rgba(10,11,15,.98); backdrop-filter:blur(18px); padding:1.5rem var(--gutter); border-bottom:1px solid var(--border); gap:1.2rem; }
+    .hero-stats { gap:1.5rem; }
+    .hero-name { letter-spacing:-2px; }
+    .section-title { letter-spacing:-1px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">GUFRAN MOMIN</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-text">
+    <div class="hero-badge"><span class="badge-dot"></span> Open to opportunities</div>
+    <h1 class="hero-name">Gufran<br/>Momin<span>.</span></h1>
+    <p class="hero-role">
+      Mechatronics & Automation Engineer &nbsp;·&nbsp;<br/>
+      <strong>Process Engineer @ Uno Minda Limited</strong><br/>
+      2-Wheeler Lighting Division, Pune
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Get in touch →</a>
+      <a href="#projects" class="btn btn-ghost">View Projects</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">2.5+</span><span class="stat-label">Years Exp.</span></div>
+      <div class="stat"><span class="stat-num">4+</span><span class="stat-label">Projects</span></div>
+      <div class="stat"><span class="stat-num">5+</span><span class="stat-label">Certtifications</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="profile-card">
+      <div class="profile-img-wrap"><img src="./images/profile.jpeg" style="width:100%; height: 100%; border-radius: 50%;" /></div>
+      <div class="profile-name">Gufran Momin</div>
+      <div class="profile-title">Process Engineer · Uno Minda Limited</div>
+      <div class="profile-tags">
+        <span class="tag accent">PLC / HMI</span>
+        <span class="tag blue">Yaskawa</span>
+        <span class="tag">Kaizen</span>
+        <span class="tag">Poka Yoke</span>
+        <span class="tag blue">Machine Vision</span>
+      </div>
+      <div class="card-metrics">
+        <div class="metric"><div class="metric-val">Pune</div><div class="metric-label">Location</div></div>
+        <div class="metric"><div class="metric-val">B.Tech</div><div class="metric-label">MIT ADT University</div></div>
+        <div class="metric"><div class="metric-val">Jul '23</div><div class="metric-label">At Uno Minda</div></div>
+        <div class="metric"><div class="metric-val">Open</div><div class="metric-label">To Offers</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <span class="section-label">About Me</span>
+      <h2 class="section-title">Engineer by training,<br/>problem-solver by instinct.</h2>
+      <p>I'm <strong>Gufran Momin</strong> — a Mechatronics and Automation Engineer with <strong>2.5+ years</strong> of hands-on experience in manufacturing process engineering. I work at <strong>Uno Minda Limited</strong>, 2-Wheeler Lighting Division, Pune, driving efficiency, quality, and productivity on the shop floor.</p>
+      <p>My expertise spans <strong>PLC ladder logic programming</strong>, HMI development (Mitsubishi), robot programming (Yaskawa), and process improvement through <strong>5S, Kaizen, and Fixture Modification</strong>. I've implemented sensor-based Poka Yoke systems that meaningfully reduced defect rates across the assembly line.</p>
+      <p>I hold a <strong>B.Tech. in Mechatronics and Automation</strong> and am continuously expanding — currently exploring <strong>machine vision systems (Cognex & Keyence), Python, Industry 4.0 and Digital Twins of Assembly Lines.</strong> Outside the plant, I enjoy programming microcontrollers as a hobby.</p>
+    </div>
+    <div class="about-highlights reveal">
+      <div class="highlight-item">
+        <div class="hi-icon">🤖</div>
+        <div><div class="hi-title">PLC & Robot Programming</div><div class="hi-desc">Mitsubishi PLC ladder logic, HMI development, Yaskawa robot programming and maintenance.</div></div>
+      </div>
+      <div class="highlight-item">
+        <div class="hi-icon">⚙️</div>
+        <div><div class="hi-title">Process Improvement</div><div class="hi-desc">5S, Kaizen, Poka Yoke, 7QC Tools — translating lean principles into measurable factory floor gains.</div></div>
+      </div>
+      <div class="highlight-item">
+        <div class="hi-icon">🏭</div>
+        <div><div class="hi-title">Surface Treatment & Antifog</div><div class="hi-desc">Specialised in metallizing and Antifog systems for 2-wheeler automotive lighting components.</div></div>
+      </div>
+      <div class="highlight-item">
+        <div class="hi-icon">👁️</div>
+        <div><div class="hi-title">Machine Vision Systems</div><div class="hi-desc">Cognex and Keyence machine vision for quality inspection, defect detection, and vision-based automation.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <span class="section-label">Career</span>
+  <h2 class="section-title reveal">Work Experience</h2>
+  <p class="section-sub reveal">My professional journey in manufacturing and automation engineering.</p>
+  <div class="timeline">
+
+    <div class="tl-item reveal">
+      <div class="tl-dot active">💼</div>
+      <div class="tl-body">
+        <div class="tl-period">Jul 2023 – Present &nbsp;·&nbsp; 2 Years 10 Months</div>
+        <div class="tl-role">Process Engineer</div>
+        <div class="tl-company">Uno Minda Limited — 2-Wheeler Lighting Division, Pune</div>
+        <ul class="tl-desc">
+          <li>Proficient in ladder logic programming, HMI development on Mitsubishi PLC, and robot programming for Yaskawa industrial robots.</li>
+          <li>Contributed to the preventive maintenance team — planned and executed maintenance activities, created comprehensive documentation and check sheets for various equipment.</li>
+          <li>Applied 5S principles, Kaizen, and Line Balancing methodologies, leading to efficiency improvements in manufacturing processes.</li>
+          <li>Actively involved in the Surface Treatment department, specialising in metallizing and Antifog systems with focus on process enhancements.</li>
+          <li>Implemented a kaizen initiative replacing conventional heaters with induction heaters in metallizing — achieved approximately <strong style="color:var(--accent)">15% reduction in electrical consumption</strong>.</li>
+          <li>Designed and deployed sensor-based Poka Yoke systems to detect and prevent quality issues, contributing to significant defect reduction.</li>
+        </ul>
+        <div class="tl-skills">
+          <span class="tag accent">PLC Ladder Logic</span>
+          <span class="tag blue">Yaskawa</span>
+          <span class="tag">Mitsubishi HMI</span>
+          <span class="tag">Kaizen</span>
+          <span class="tag">Poka Yoke</span>
+          <span class="tag">5S</span>
+          <span class="tag">7QC Tools</span>
+          <span class="tag accent">Preventive Maintenance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-dot">🎓</div>
+      <div class="tl-body">
+        <div class="tl-period">3 Months &nbsp;·&nbsp; Academic / On-Site Project</div>
+        <div class="tl-role">Antifog System Implementation — Surface Treatment</div>
+        <div class="tl-company">2-Wheeler Lighting Paintshop</div>
+        <ul class="tl-desc">
+          <li>Contributed to the Antifog system implementation team, gaining insights into critical paintshop parameters — paint atomization, curing time, and coating quality.</li>
+          <li>Acquired hands-on knowledge of the Yaskawa robot system for precision painting: I/Os, programming, and maintenance procedures.</li>
+          <li>Familiarised with chillers and AHUs for regulating humidity and temperature within the paintshop environment.</li>
+        </ul>
+        <div class="tl-skills">
+          <span class="tag">Yaskawa</span>
+          <span class="tag blue">Antifog Systems</span>
+          <span class="tag">Paintshop Operations</span>
+          <span class="tag">AHU / Chillers</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <span class="section-label">Expertise</span>
+  <h2 class="section-title reveal">Technical Skills</h2>
+  <p class="section-sub reveal">Core tools and technologies across automation, programming, and manufacturing excellence.</p>
+  <div class="skills-grid">
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🤖</div>
+      <div class="skill-card-title">Automation & Control</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">PLC Ladder Logic</span><span class="skill-pct">75%</span></div><div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div></div>
+        <!-- <div class="skill-row"><div class="skill-info"><span class="skill-name">Poka-Yoke Implementation</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div> -->
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Robot Programming (Yaskawa)</span><span class="skill-pct">60%</span></div><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Sensors & Actuators</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">💻</div>
+      <div class="skill-card-title">Software & Programming</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Machine Vision (Cognex / Keyence)</span><span class="skill-pct">65%</span></div><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Digital Twins (basics)</span><span class="skill-pct">40%</span></div><div class="bar-bg"><div class="bar-fill" style="width:40%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Arduino / Raspberry pi </span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Python</span><span class="skill-pct">60%</span></div><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">⚙️</div>
+      <div class="skill-card-title">Manufacturing & Process</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Process Automation & Improvement</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Poka Yoke & 7QC Tools</span><span class="skill-pct">75%</span></div><div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">5S & Kaizen</span><span class="skill-pct">85%</span></div><div class="bar-bg"><div class="bar-fill" style="width:85%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Preventive Maintenance</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- <div class="skill-card reveal">
+      <div class="skill-card-icon">📊</div>
+      <div class="skill-card-title">Quality & Methodology</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Six Sigma (Yellow Belt)</span><span class="skill-pct">75%</span></div><div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">3M — Muda / Mura / Muri</span><span class="skill-pct">80%</span></div><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+        <div class="skill-row"><div class="skill-info"><span class="skill-name">Vision-Based Inspection</span><span class="skill-pct">65%</span></div><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div></div>
+      </div>
+    </div> -->
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <span class="section-label">Work</span>
+  <h2 class="section-title reveal">Projects</h2>
+  <p class="section-sub reveal">Engineering projects spanning robotics, autonomous systems, and manufacturing process improvement.</p>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-thumb"><span class="project-icon"><img src="./images/induction vs resistance heating.jpg" style="width: 100%; height: 100%;"/></span></div>
+      <div class="project-body">
+        <div class="project-category">Kaizen · Energy Efficiency</div>
+        <div class="project-location">📍 Uno Minda — Metallizing Dept.</div>
+        <div class="project-title">Induction Heater Kaizen — 15% Power Reduction</div>
+        <div class="project-desc">Identified energy waste from conventional resistance heaters in metallizing. Proposed and implemented a kaizen replacing them with induction heaters, achieving approximately 15% reduction in electrical energy consumption.</div>
+        <div class="project-tags"><span class="tag accent">Kaizen</span><span class="tag">Energy Efficiency</span><span class="tag blue">Metallizing</span></div>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-thumb"><span class="project-icon"><img src="./images/antifog image.jpg" style="width: 100%; height: 100%;"/></span></div>
+      <div class="project-body">
+        <div class="project-category">Automation · 3 Months</div>
+        <div class="project-location">📍 Uno Minda — Surface Treatment</div>
+        <div class="project-title">Antifog System for 2-Wheeler Lighting</div>
+        <div class="project-desc">Contributed to the Antifog system implementation for automotive lighting components. Worked with Yaskawa robots for precision painting and gained expertise in paintshop critical parameters including paint atomization, curing time, and AHU/chiller control.</div>
+        <div class="project-tags"><span class="tag accent">Yaskawa</span><span class="tag">Antifog</span><span class="tag blue">Robot Programming</span><span class="tag">AHU</span></div>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-thumb"><span class="project-icon"><img src="./images/line following agv.jpeg" style="width: 100%; padding-top:10%;"/></span></div>
+      <div class="project-body">
+        <div class="project-category">Mechatronics · 6 Months</div>
+        <div class="project-location">📍 MIT ADT University — Mini Project</div>
+        <div class="project-title">Smart AGV — Line Following Autonomous Vehicle</div>
+        <div class="project-desc">Designed and developed a Smart Automated Guided Vehicle (AGV) using ultrasonic sensors, IR sensors, and motor encoders integrated with an Arduino microcontroller for autonomous line-following and obstacle avoidance.</div>
+        <div class="project-tags"><span class="tag accent">Arduino</span><span class="tag">IR Sensors</span><span class="tag blue">Ultrasonic</span><span class="tag">Motor Encoders</span></div>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-thumb"><span class="project-icon"><img src="./images/AGV.jpeg" style="width: 50%;"/><img src="./images/AGVMAP.jpeg" style="width: 50%;"/></span></div>
+      <div class="project-body">
+        <div class="project-category">Robotics · 6 Months</div>
+        <div class="project-location">📍 MIT ADT University — Final Year Project</div>
+        <div class="project-title">Indoor Mapping Autonomous Robot</div>
+        <div class="project-desc">Developed an autonomous robot capable of navigating a mapped indoor environment on a destination command. The robot mapped its surroundings and planned an optimal path for autonomous traversal, involving the full team in sensor fusion and control design.</div>
+        <div class="project-tags"><span class="tag accent">Autonomous Navigation</span><span class="tag blue">Mapping</span><span class="tag">Path Planning</span><span class="tag">Microcontroller</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <span class="section-label">Credentials</span>
+  <h2 class="section-title reveal">Certifications</h2>
+  <p class="section-sub reveal">Training programmes, workshops, and online certifications completed.</p>
+  <div class="cert-grid">
+    <div class="cert-card reveal">
+      <div class="cert-icon">👁️</div>
+      <div><div class="cert-name">A Bootcamp in industrial Automation</div><div class="cert-issuer">Udemy</div></div>
+      <button class="btn btn-ghost" onclick="toggleNote('industrial automation note')">Description</button>
+        <div id="industrial automation note" class="note-box">
+           <ul>
+            <li>
+               Basics of Electrical Components / Protection circuits.
+             </li>
+             <li>
+               Motor Driving / VFD.
+             </li>
+             <li>
+               Sensors and Actuators.
+             </li>
+             <li>
+               Troubleshooting Electrical Panels.
+             </li>
+             <li>
+               PLC Programming with Ladder Diagram and HMI Visualization in CodeSys.
+             </li>
+           </ul>
+        </div>
+  </div>
+  </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">⚙️</div>
+      <div><div class="cert-name">PLC Programming Workshop</div><div class="cert-issuer">MIT-ADT University</div></div>
+      <button class="btn btn-ghost" onclick="toggleNote('siemens plc programmming note')">Description</button>
+        <div id="siemens plc programmming note" class="note-box">
+           <ul>
+            <li>
+              Basics of Electrical wiring and PLC Programming.
+            </li>
+             <li>
+               PLC Programming in Siemens SIMATIC S7-1200 and S7-1500 PLC
+             </li>
+             <li>
+               PLC Programming of Traffic Signal for clearing the logic of Timers and Counters.
+             </li>
+           </ul>
+        </div>
+    </div>
+    <!-- <div class="cert-card reveal">
+      <div class="cert-icon">🐍</div>
+      <div><div class="cert-name">Python for Beginners</div><div class="cert-issuer">Online Course Platform</div></div>
+    </div> -->
+    <div class="cert-card reveal">
+      <div class="cert-icon">👁️</div>
+      <div><div class="cert-name">Industrial Digital Twins for Automation - Godot and CodeSys</div><div class="cert-issuer">Udemy</div></div>
+      <button class="btn btn-ghost" onclick="toggleNote('digital twin note')">Description</button>
+        <div id="digital twin note" class="note-box">
+           <ul>
+            <li>
+              Introduction to Godot Game Engine - Nodes, Camera, Lights.
+            </li>
+            <li>
+              Introduction to Godot C# Scripts. 
+            </li>
+            <li>
+              TCP Communication for Digital Twin.
+            </li>
+           </ul>
+        </div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🐍</div>
+      <div><div class="cert-name">Python for Beginners and Intermediate Python</div><div class="cert-issuer">Online Course Platform</div></div>
+      <button class="btn btn-ghost" onclick="toggleNote('Python for beginners note')">Description</button>
+        <div id="Python for beginners note" class="note-box">
+           <ul>
+            <li>
+              Python programming fundamentals - Strings, Variable and Data types
+            </li>
+            <li>
+              Control flow and Loops - If-Else, For / While loops, Break, Continue and Pass Statements
+            </li>
+            <li>
+              Functions and Data Structures in Python - Lists, Arrays and Dictionaries.
+            </li>
+           </ul>
+        </div>
+    </div>
+    <!-- <div class="cert-card reveal">
+      <div class="cert-icon">🧠</div>
+      <div><div class="cert-name">Machine Learning Course</div><div class="cert-issuer">Sololearn</div></div>
+    </div> -->
+    <div class="cert-card reveal">
+      <div class="cert-icon">👁️</div>
+      <div><div class="cert-name">Cognex & Keyence Machine Vision Systems</div><div class="cert-issuer">Udemy</div></div>
+      <button class="btn btn-ghost" onclick="toggleNote('vision system note')">Description</button>
+        <div id="vision system note" class="note-box">
+           <ul>
+            <li>
+              ROI(Region of Interest) setting.
+            </li>
+            <li>
+              Intensity based LED detection.
+            </li>
+            <li>
+              Colour variation detection in LED'S.
+            </li>
+            <li>
+              Alignment detection of High Beam and Low beam..
+            </li>
+           </ul>
+        </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <span class="section-label">Background</span>
+  <h2 class="section-title reveal">Education</h2>
+  <p class="section-sub reveal">Academic foundation that drives my engineering mindset.</p>
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-degree">B.Tech — Mechatronics and Automation Engineering</div>
+      <div class="edu-school">MIT ADT University, Pune</div>
+      <div class="edu-year">Graduated 2023 · Pune, Maharashtra</div>
+      <div class="edu-note"><div class="edu-note-val">2023</div><div class="edu-note-label">Graduation Year</div></div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-degree">HSC — Science (PCMB)</div>
+      <div class="edu-school">Fr. Agnel's Vidyankur Junior College</div>
+      <div class="edu-year">2019 · Pune, Maharashtra</div>
+      <div class="edu-note"><div class="edu-note-val">2019</div><div class="edu-note-label">74.4%</div></div>
+    </div>
+    <!-- <div class="edu-card reveal">
+      <div class="edu-degree">SSC — Secondary School</div>
+      <div class="edu-school">Your School — add name</div>
+      <div class="edu-year">Year · City, Maharashtra</div>
+      <div class="edu-note"><div class="edu-note-val">—</div><div class="edu-note-label">Add % here</div></div>
+    </div> -->
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <span class="section-label">Let's Connect</span>
+    <h2 class="section-title reveal">Get in Touch</h2>
+    <p class="section-sub reveal" style="margin:0 auto; text-align:center;">
+      Open to professional opportunities, collaborations, or conversations about automation and manufacturing.
+    </p>
+    <div class="contact-links reveal">
+      <a href="mailto:gufranmomin1234@gmail.com" class="contact-item">
+        <span>✉️</span> gufranmomin1234@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/gufran-momin" target="_blank" class="contact-item">
+        <span>🔗</span> linkedin.com/in/gufran-momin
+      </a>
+      <a href="tel:+917030380512" class="contact-item">
+        <span>📞</span> +91 70303 80512
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by <strong>Gufran Momin</strong> · Process Engineer · Pune, Maharashtra · © 2025</p>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks  = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  const barObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate'); barObs.unobserve(e.target); } });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.bar-fill').forEach(b => barObs.observe(b));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navAs    = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    navAs.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : ''; });
+  }, { passive: true });
+
+
+</script>
+</body>
+</html>
